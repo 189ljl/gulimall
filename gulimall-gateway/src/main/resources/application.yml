@@ -1,0 +1,25 @@
+server:
+  port: 8086
+spring:
+  application:
+    name: gulimall-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+      config:
+        server-addr: 127.0.0.1:8848
+    gateway:
+      routes:
+        - id: product_route
+          uri: lb://gulimall-product
+          predicates:
+            - Path=/api/renren-fast/product/**
+          filters:
+            - RewritePath=/api/renren-fast/?(?<segment>.*), /$\{segment}
+        - id: admin_route
+          uri: lb://renren-fast
+          predicates:
+            - Path=/api/renren-fast/**
+          filters:
+            - RewritePath=/api/?(?<segment>.*), /$\{segment}
